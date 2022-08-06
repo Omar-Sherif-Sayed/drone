@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: drone
+  datasource:
+    url: jdbc:mysql://localhost:3306/drone
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        enable_lazy_load_no_trans: true
+  flyway:
+    locations: classpath:/db/migration
+  # Files Upload
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+  web:
+    resources:
+      static-locations[0]: file:src/main/resources/static/
+      static-locations[1]: classpath:/static/
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+# Server properties
+server:
+  port: 8090
+  servlet:
+    context-path: /drone
+
+scheduler:
+  drone-battery:
+#    cron-expression: 0 */30 * ? * *	#Every 30 minutes
+    cron-expression: 0 * * ? * *	#Every minute for testing only
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  packagesToScan: com.drone.controller
+
+logging:
+  level:
+    org:
+      springframework:
+        web: INFO
+        ws:
+          client:
+            MessageTracing:
+              sent: TRACE
+              received: TRACE
+          server:
+            MessageTracing:
+              sent: TRACE
+              received: TRACE
