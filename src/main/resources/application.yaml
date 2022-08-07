@@ -44,9 +44,11 @@ server:
     context-path: /drone
 
 scheduler:
-  drone-battery:
-#    cron-expression: 0 */30 * ? * *	#Every 30 minutes
-    cron-expression: 0 * * ? * *	#Every minute for testing only
+  cron-expression:
+    decrease-drone-battery: 0 */10 * ? * *  #Every 10 minutes
+#    decrease-drone-battery: 0 * * ? * *	    #Every minute for testing purpose
+    change-drone-state: 0 */15 * ? * *	    #Every 15 minutes
+#    change-drone-state: 0 * * ? * *	    #Every minute for testing purpose
 
 springdoc:
   swagger-ui:

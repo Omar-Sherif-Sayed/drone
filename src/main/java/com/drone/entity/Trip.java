@@ -35,11 +35,6 @@ public class Trip {
     private Date endTime;
 
     public TripDto toTripDto() {
-//        List<TripItemsDto> tripItemsDto;
-//        if(tripItems != null && !tripItems.isEmpty())
-//            tripItemsDto = tripItems.stream().map(TripItems::toTripItemsDto).toList();
-//        else
-//            tripItemsDto = null;
         return new TripDto(id, drone.toDroneDto(), tripItems.stream().map(TripItems::toTripItemsDto).toList(), startTime, endTime);
     }
 

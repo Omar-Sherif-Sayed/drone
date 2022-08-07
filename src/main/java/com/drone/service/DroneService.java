@@ -71,27 +71,34 @@ public class DroneService {
         switch (drone.getState()) {
             case IDLE:
                 return Either.left(new ApplicationFailed.AssignItemToChangeIdealDroneState());
+
             case LOADING:
                 drone.setState(DroneState.LOADED);
                 break;
-            case LOADED:
+
+            case LOADED: {
                 if (drone.getBatteryCapacity() < 25L)
                     return Either.left(new ApplicationFailed.BadDroneBattery(drone.getBatteryCapacity(), 25L));
 
-                drone.setState(DroneState.DELIVERING);
                 Trip trip = tripRepository.findByDroneIdAndDroneStateAndEndTimeIsNull(id, DroneState.LOADED);
                 trip.setStartTime(new Date());
                 tripRepository.save(trip);
+                drone.setState(DroneState.DELIVERING);
                 break;
-            case DELIVERING:
+            }
+
+            case DELIVERING: {
+                Trip trip = tripRepository.findByDroneIdAndDroneStateAndEndTimeIsNull(id, DroneState.DELIVERING);
+                trip.setEndTime(new Date());
+                tripRepository.save(trip);
                 drone.setState(DroneState.DELIVERED);
-                Trip trip1 = tripRepository.findByDroneIdAndDroneStateAndEndTimeIsNull(id, DroneState.DELIVERING);
-                trip1.setEndTime(new Date());
-                tripRepository.save(trip1);
                 break;
+            }
+
             case DELIVERED:
                 drone.setState(DroneState.RETURNING);
                 break;
+                
             case RETURNING:
                 drone.setState(DroneState.IDLE);
                 break;
